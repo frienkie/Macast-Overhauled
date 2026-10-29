@@ -1,12 +1,12 @@
-# Macast-Overhauled · macOS 哔哩哔哩集成版
+# Macast-Overhauled · macOS 插件集成版
 
 [English](README.md) | [构建指南](BUILDING.md) | [开源许可](THIRD_PARTY_NOTICES.md)
 
-想把手机里的视频投到 Mac 上看？Macast 就是一个常驻菜单栏的接收器，视频、音乐和图片都能投。
+想把手机里的视频投到 Mac 上看？Macast 就是一个常驻菜单栏的接收器，视频、音乐和图片都能投。（音乐和图片的投屏实现仅基于标准 DLNA。）
 
-这个版本从 [xfangfang 的 Macast](https://github.com/xfangfang/Macast) 出发。原版仓库[最后一次提交停在 2022 年](https://github.com/xfangfang/Macast/commits/main/)，[v0.7 仍是最新正式版](https://github.com/xfangfang/Macast/releases)；新 macOS 和手机端投屏协议却一直在变，于是有了这份修补版。它把哔哩哔哩投屏、内置 MPV 和 [ModernZ](https://github.com/Samillion/ModernZ) 控制界面整合在一起，安装后就能用，不用再手动找播放器和插件。
+这个版本从 [xfangfang 的 Macast](https://github.com/xfangfang/Macast) 出发。原版仓库[最后一次提交停在 2022 年](https://github.com/xfangfang/Macast/commits/main/)，[v0.7 仍是最新正式版](https://github.com/xfangfang/Macast/releases)；macOS 却已经经过几次大版本更新，B 站手机端投屏协议也有所变化，于是有了这份修补版。它把哔哩哔哩投屏、内置 MPV 和 [ModernZ](https://github.com/Samillion/ModernZ) 控制界面整合在一起，安装后就能用，不用再手动找播放器和插件。
 
-这是独立维护的衍生版本。安装到 Mac 后，应用仍叫 **Macast.app**；原版安装包不包含这里的修补。
+这是独立维护的衍生版本。安装到 Mac 后，应用仍叫 **Macast.app**。
 
 ## 功能
 
@@ -28,7 +28,7 @@
 
 ### 安装步骤
 
-1. 从 [Releases 下载 **Macast-MacOS-v0.7-arm64.dmg**](https://github.com/frienkie/Macast-Overhauled/releases/latest/download/Macast-MacOS-v0.7-arm64.dmg)。
+1. 从 [Releases 下载 **Macast-MacOS-v0.8-arm64.dmg**](https://github.com/frienkie/Macast-Overhauled/releases/latest/download/Macast-MacOS-v0.8-arm64.dmg)。
 2. 打开 DMG，将 **Macast.app** 拖入 **Applications（应用程序）**。
 3. 从“应用程序”打开 Macast，菜单栏出现图标即表示应用已启动。
 4. 首次使用时允许 Macast 访问局域网。
@@ -37,7 +37,7 @@
 
 ### 如何获取新版
 
-这个修补版不会自动联网检查 Macast 的更新，也不会弹出上游版本提示。需要升级时，从本项目获取新的 DMG，像首次安装一样拖入“应用程序”覆盖即可。随 App 附带、未经修改的插件会在下次启动时更新；你自己修改的插件会保留。
+由于本人不喜欢工具类应用的联网更新功能，这个修补版不会自动联网检查 Macast 的更新，也不会弹出上游版本提示。需要升级时，从本项目获取新的 DMG，像首次安装一样拖入“应用程序”覆盖即可。随 App 附带、未经修改的插件会在下次启动时更新；你自己修改的插件会保留。
 
 ## 使用方法
 
@@ -152,7 +152,7 @@
 | [Vue](https://github.com/vuejs/vue) / [Element UI](https://github.com/ElemeFE/element) / [Vue Resource](https://github.com/pagekit/vue-resource) | 高级设置页面、组件、英语语言包及请求处理 | MIT |
 | [Python](https://www.python.org/) / [py2app](https://github.com/ronaldoussoren/py2app) | 应用运行时与 macOS 打包 | 见各项目原始许可 |
 | [rumps](https://github.com/jaredks/rumps) / [PyObjC](https://github.com/ronaldoussoren/pyobjc) | 菜单栏与 Cocoa 集成 | 见随包原始许可 |
-| [CherryPy](https://github.com/cherrypy/cherrypy) / [cheroot](https://github.com/cherrypy/cheroot) | 本地 HTTP 服务 | See packaged notices |
+| [CherryPy](https://github.com/cherrypy/cherrypy) / [cheroot](https://github.com/cherrypy/cheroot) | 本地 HTTP 服务 | 见随包原始许可 |
 | [Requests](https://github.com/psf/requests) / [lxml](https://github.com/lxml/lxml) / [netifaces](https://github.com/al45tair/netifaces) / [pyperclip](https://github.com/asweigart/pyperclip) | 网络请求、XML、网卡枚举与剪贴板支持 | 见随包原始许可 |
 
 ModernZ 继承了 mpv OSC、maoiscat/mpv-osc-modern、cyl0/ModernX 和 dexeonify/ModernX 的工作，完整上游致谢见 [ModernZ 原始文档](mpv_ui/ModernZ-upstream-README.md)。

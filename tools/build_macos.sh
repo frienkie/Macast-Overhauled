@@ -42,7 +42,7 @@ if [[ "${MACAST_SKIP_SMOKE:-0}" != 1 ]]; then
   kill "$smoke_pid"
   wait "$smoke_pid" || true
 fi
-version="$(cat macast/.version)"
+version="$(tr -d '\r\n' < macast/.version)"
 create-dmg --skip-jenkins --volname "Macast $version ($arch)" \
   --window-size 800 400 --icon-size 100 --icon Macast.app 200 190 \
   --app-drop-link 600 185 "Macast-MacOS-v${version}-${arch}.dmg" dist/

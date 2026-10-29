@@ -1,4 +1,4 @@
-# Macast-Overhauled for macOS
+# Macast-Overhauled v0.8 for macOS
 
 This fork keeps Macast usable on current Apple Silicon Macs. The application is still named **Macast.app**.
 

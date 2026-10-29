@@ -1,12 +1,12 @@
-# Macast-Overhauled · Bilibili integrated edition for macOS
+# Macast-Overhauled · Plugin-integrated edition for macOS
 
 [简体中文](README_ZH.md) | [Build guide](BUILDING.md) | [Open-source licenses](THIRD_PARTY_NOTICES.md)
 
-Want to watch a video from your phone on your Mac? Macast sits in the menu bar and receives videos, music, and pictures.
+Want to watch a video from your phone on your Mac? Macast sits in the menu bar and receives videos, music, and pictures. Music and picture casting use standard DLNA only.
 
-This edition builds on [xfangfang's Macast](https://github.com/xfangfang/Macast). The original repository's [last commit was in 2022](https://github.com/xfangfang/Macast/commits/main/), and [v0.7 is still its latest release](https://github.com/xfangfang/Macast/releases). macOS and phone casting protocols have kept moving, so this edition patches the gaps and brings Bilibili casting, a bundled MPV player, and [ModernZ](https://github.com/Samillion/ModernZ) controls together. You can install it without hunting down a separate player or plugin files.
+This edition builds on [xfangfang's Macast](https://github.com/xfangfang/Macast). The original repository's [last commit was in 2022](https://github.com/xfangfang/Macast/commits/main/), and [v0.7 is still its latest release](https://github.com/xfangfang/Macast/releases). macOS has moved through several major versions, and Bilibili's phone casting protocol has changed too. This patched edition brings Bilibili casting, a bundled MPV player, and [ModernZ](https://github.com/Samillion/ModernZ) controls together. You can install it without hunting down a separate player or plugin files.
 
-This derivative is maintained independently. The installed app is still named **Macast.app**; the original download does not include these patches.
+This derivative is maintained independently. The installed app is still named **Macast.app**.
 
 ## Features
 
@@ -28,7 +28,7 @@ This derivative is maintained independently. The installed app is still named **
 
 ### Steps
 
-1. Download [**Macast-MacOS-v0.7-arm64.dmg**](https://github.com/frienkie/Macast-Overhauled/releases/latest/download/Macast-MacOS-v0.7-arm64.dmg) from Releases.
+1. Download [**Macast-MacOS-v0.8-arm64.dmg**](https://github.com/frienkie/Macast-Overhauled/releases/latest/download/Macast-MacOS-v0.8-arm64.dmg) from Releases.
 2. Open the DMG and drag **Macast.app** into **Applications**.
 3. Open Macast from Applications. Its icon appears in the menu bar.
 4. Allow local network access when prompted.
@@ -37,7 +37,7 @@ The current package uses local ad-hoc signing and has no Apple notarization. If 
 
 ### Getting a newer build
 
-This edition does not check for Macast updates online or show upstream version prompts. When a newer build is available from this project, open its DMG and replace the app in Applications. Bundled plugins that you have not changed update on the next launch; your own edits stay in place.
+I prefer utility apps not to check for updates online, so this edition does not contact the network to check for Macast updates or show upstream version prompts. To upgrade, download a newer DMG from this project and replace the app in Applications. Bundled plugins that you have not changed update on the next launch; your own edits stay in place.
 
 ## Usage
 

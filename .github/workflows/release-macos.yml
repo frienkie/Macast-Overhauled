@@ -3,7 +3,7 @@ name: Build macOS release
 on:
   push:
     branches: [main]
-    paths: [.github/workflows/release-macos.yml, tools/build_macos.sh, tools/prepare_distribution.py, README.md, README_ZH.md]
+    paths: [.github/workflows/release-macos.yml, tools/build_macos.sh, tools/prepare_distribution.py, macast/.version, README.md, README_ZH.md, RELEASE_NOTES.md]
   workflow_dispatch:
 
 permissions:
@@ -26,22 +26,23 @@ jobs:
         run: |
           export PATH="$(brew --prefix gettext)/bin:$PATH"
           PYTHON="$PWD/.venv/bin/python" MACAST_SKIP_SMOKE=1 bash tools/build_macos.sh
-          hdiutil verify Macast-MacOS-v0.7-arm64.dmg
-          shasum -a 256 Macast-MacOS-v0.7-arm64.dmg > Macast-MacOS-v0.7-arm64.dmg.sha256
+          version="$(tr -d '\r\n' < macast/.version)"
+          asset="Macast-MacOS-v${version}-arm64.dmg"
+          hdiutil verify "$asset"
+          shasum -a 256 "$asset" > "${asset}.sha256"
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view v0.7-overhauled-2026.10.29 >/dev/null 2>&1; then
-            gh release upload v0.7-overhauled-2026.10.29 \
-              Macast-MacOS-v0.7-arm64.dmg \
-              Macast-MacOS-v0.7-arm64.dmg.sha256 --clobber
-            gh release edit v0.7-overhauled-2026.10.29 --notes-file RELEASE_NOTES.md
+          version="$(tr -d '\r\n' < macast/.version)"
+          tag="v${version}"
+          asset="Macast-MacOS-v${version}-arm64.dmg"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release upload "$tag" "$asset" "${asset}.sha256" --clobber
+            gh release edit "$tag" --notes-file RELEASE_NOTES.md
           else
-            gh release create v0.7-overhauled-2026.10.29 \
-              Macast-MacOS-v0.7-arm64.dmg \
-              Macast-MacOS-v0.7-arm64.dmg.sha256 \
+            gh release create "$tag" "$asset" "${asset}.sha256" \
               --target "$GITHUB_SHA" \
-              --title 'Macast-Overhauled for macOS (arm64)' \
+              --title "Macast-Overhauled ${tag} for macOS (arm64)" \
               --notes-file RELEASE_NOTES.md
           fi

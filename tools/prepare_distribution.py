@@ -150,8 +150,6 @@ def prepare(app):
         text = (output / name).read_text()
         text = text.replace('](Macast/)', '](../Macast-Local-Source.tar.gz)')
         text = text.replace('](Macast-plugins/)', '](../Macast-Local-Source.tar.gz)')
-        text = text.replace('，源码分发目录中的位置为 `Macast/Macast-MacOS-v0.7-arm64.dmg`', '')
-        text = text.replace(' In the source distribution, it is located at `Macast/Macast-MacOS-v0.7-arm64.dmg`.', '')
         (output / name).write_text(text)
     documentation = app.parent / 'Documentation'
     if documentation.exists():
