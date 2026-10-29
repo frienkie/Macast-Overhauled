@@ -23,12 +23,12 @@
 ### 系统要求
 
 - Apple Silicon Mac（M 系列芯片）。当前提供 `arm64` 安装包。
-- macOS 15 或更新版本（安装包声明的最低版本，构建环境为 macOS 27）。
+- macOS 15 或更新版本（安装包声明的最低版本；公开安装包在 macOS 15 上构建）。
 - 手机与 Mac 连接同一局域网，且网络允许设备互相访问。
 
 ### 安装步骤
 
-1. 获取[本项目发布的 **Macast-MacOS-v0.7-arm64.dmg**](https://github.com/frienkie/Macast-Overhauled/releases/latest/download/Macast-MacOS-v0.7-arm64.dmg)，源码分发目录中的位置为 `Macast-MacOS-v0.7-arm64.dmg`。
+1. 从 [Releases 下载 **Macast-MacOS-v0.7-arm64.dmg**](https://github.com/frienkie/Macast-Overhauled/releases/latest/download/Macast-MacOS-v0.7-arm64.dmg)。
 2. 打开 DMG，将 **Macast.app** 拖入 **Applications（应用程序）**。
 3. 从“应用程序”打开 Macast，菜单栏出现图标即表示应用已启动。
 4. 首次使用时允许 Macast 访问局域网。

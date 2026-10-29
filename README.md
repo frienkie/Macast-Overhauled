@@ -23,12 +23,12 @@ This derivative is maintained independently. The installed app is still named **
 ### Requirements
 
 - An Apple Silicon Mac (M-series chip). The current package is `arm64`.
-- macOS 15 or later (the package-declared minimum; built on macOS 27).
+- macOS 15 or later (the package-declared minimum; the release is built on macOS 15).
 - Phone and Mac on the same local network, with communication between devices allowed.
 
 ### Steps
 
-1. Obtain [this edition's **Macast-MacOS-v0.7-arm64.dmg**](https://github.com/frienkie/Macast-Overhauled/releases/latest/download/Macast-MacOS-v0.7-arm64.dmg). In the source distribution, it is located at `Macast-MacOS-v0.7-arm64.dmg`.
+1. Download [**Macast-MacOS-v0.7-arm64.dmg**](https://github.com/frienkie/Macast-Overhauled/releases/latest/download/Macast-MacOS-v0.7-arm64.dmg) from Releases.
 2. Open the DMG and drag **Macast.app** into **Applications**.
 3. Open Macast from Applications. Its icon appears in the menu bar.
 4. Allow local network access when prompted.
