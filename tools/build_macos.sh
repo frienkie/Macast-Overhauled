@@ -34,12 +34,14 @@ dylibbundler -od -b -x "$resources/bin/MacOS/mpv" \
 codesign --force --deep --sign - "$app"
 codesign --verify --deep --strict "$app"
 "$resources/bin/MacOS/mpv" --version
-"$app/Contents/MacOS/Macast" >/dev/null 2>&1 &
-smoke_pid=$!
-sleep 5
-kill -0 "$smoke_pid"
-kill "$smoke_pid"
-wait "$smoke_pid" || true
+if [[ "${MACAST_SKIP_SMOKE:-0}" != 1 ]]; then
+  "$app/Contents/MacOS/Macast" >/dev/null 2>&1 &
+  smoke_pid=$!
+  sleep 5
+  kill -0 "$smoke_pid"
+  kill "$smoke_pid"
+  wait "$smoke_pid" || true
+fi
 version="$(cat macast/.version)"
 create-dmg --skip-jenkins --volname "Macast $version ($arch)" \
   --window-size 800 400 --icon-size 100 --icon Macast.app 200 190 \

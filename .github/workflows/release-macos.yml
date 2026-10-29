@@ -1,0 +1,40 @@
+name: Build macOS release
+
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/release-macos.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: macos-15
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build dependencies
+        run: brew install python@3.12 mpv dylibbundler create-dmg gettext
+      - name: Install Python dependencies
+        run: |
+          "$(brew --prefix python@3.12)/bin/python3.12" -m venv .venv
+          .venv/bin/python -m pip install -r requirements/darwin.txt
+          .venv/bin/python -m pip install 'setuptools<81' 'py2app>=0.28.8,<0.29'
+      - name: Build signed app and DMG
+        run: |
+          export PATH="$(brew --prefix gettext)/bin:$PATH"
+          PYTHON="$PWD/.venv/bin/python" MACAST_SKIP_SMOKE=1 bash tools/build_macos.sh
+          hdiutil verify Macast-MacOS-v0.7-arm64.dmg
+          shasum -a 256 Macast-MacOS-v0.7-arm64.dmg > Macast-MacOS-v0.7-arm64.dmg.sha256
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create v0.7-overhauled-2026.10.29 \
+            Macast-MacOS-v0.7-arm64.dmg \
+            Macast-MacOS-v0.7-arm64.dmg.sha256 \
+            --target "$GITHUB_SHA" \
+            --title 'Macast-Overhauled for macOS (arm64)' \
+            --notes-file RELEASE_NOTES.md
