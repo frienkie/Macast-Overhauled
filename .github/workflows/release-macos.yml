@@ -3,7 +3,7 @@ name: Build macOS release
 on:
   push:
     branches: [main]
-    paths: [.github/workflows/release-macos.yml, tools/build_macos.sh]
+    paths: [.github/workflows/release-macos.yml, tools/build_macos.sh, tools/prepare_distribution.py]
   workflow_dispatch:
 
 permissions:

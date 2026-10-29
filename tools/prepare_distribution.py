@@ -53,7 +53,12 @@ def native_records(resources, output):
                     part in ('man', 'include', 'lib') for part in relative.parts[:-1]):
                 copy(path, target / relative)
                 notices.append(relative.as_posix())
-        supplement = ROOT / 'licenses/native-supplement' / target.name
+        supplement_root = ROOT / 'licenses/native-supplement'
+        supplement = supplement_root / target.name
+        if not supplement.exists():
+            candidates = sorted(supplement_root.glob(name + '-*'))
+            if len(candidates) == 1:
+                supplement = candidates[0]
         if supplement.exists():
             shutil.copytree(supplement, target / 'upstream', dirs_exist_ok=True)
             notices.extend('upstream/' + p.relative_to(supplement).as_posix()
@@ -71,6 +76,7 @@ def native_records(resources, output):
         records.append({'name': name, 'version': owner.name, 'binaries': files,
                         'upstream_source': source[1] if source else None,
                         'homebrew_license_declaration': license_line[1] if license_line else None,
+                        'supplement_source_version': supplement.name if supplement.exists() else None,
                         'notices': sorted(notices)})
     return records
 
