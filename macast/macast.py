@@ -4,11 +4,9 @@ import os
 import re
 import sys
 import time
-import json
 import cherrypy
 import logging
 import threading
-import requests
 import pyperclip
 import gettext
 import importlib
@@ -19,6 +17,7 @@ from .protocol import DLNAProtocol
 from .server import Service
 from .utils import RENDERER_DIR, PROTOCOL_DIR, Setting
 from macast_renderer.mpv import MPVRenderer
+from .bundled_plugins import install_bundled_plugins
 
 logger = logging.getLogger("main")
 logger.setLevel(logging.DEBUG)
@@ -83,6 +82,10 @@ class MacastPlugin:
             for key, value in metadata:
                 print('%-10s: %s' % (key, value))
                 setattr(self, key, str(value))
+        # Skip incompatible plugin code before importing platform-specific
+        # modules such as win32api. All platforms' plugins can be bundled.
+        if sys.platform not in [value.strip() for value in self.platform.split(',')]:
+            return
         if hasattr(self, 'renderer'):
             module = importlib.import_module(f'{RENDERER_DIR}.{base_name}')
             print(f'Load plugin {self.renderer} done />\n')
@@ -102,6 +105,7 @@ class MacastPluginManager:
         sys.path.append(SETTING_DIR)
         self.create_plugin_dir(RENDERER_DIR)
         self.create_plugin_dir(PROTOCOL_DIR)
+        install_bundled_plugins(SETTING_DIR)
         self.renderer_list = [renderer_default]
         self.renderer_list += self.load_macast_plugin(RENDERER_DIR)
         self.protocol_list = [protocol_default]
@@ -180,10 +184,8 @@ class Macast(App):
         self.quit_menuitem = None
         self.ip_menuitem = None
         self.version_menuitem = None
-        self.auto_check_update_menuitem = None
         self.start_at_login_menuitem = None
         self.menubar_icon_menuitem = None
-        self.check_update_menuitem = None
         self.about_menuitem = None
         self.open_config_menuitem = None
         self.renderer_menuitem = None
@@ -198,7 +200,6 @@ class Macast(App):
 
         # setting items
         self.setting_start_at_login = None
-        self.setting_check = None
         self.setting_menubar_icon = 0
         self.setting_renderer = ''
         self.setting_protocol = ''
@@ -243,9 +244,6 @@ class Macast(App):
         self.ip_menuitem = MenuItem("{}:{}".format(ip_text, port), enabled=False)
         self.version_menuitem = MenuItem(
             "{} v{}".format(Setting.get_friendly_name(), Setting.get_version()), enabled=False)
-        self.auto_check_update_menuitem = MenuItem(_("Auto Check Updates"),
-                                                   self.on_auto_check_update_click,
-                                                   checked=self.setting_check)
         self.start_at_login_menuitem = MenuItem(_("Start At Login"),
                                                 self.on_start_at_login_click,
                                                 checked=self.setting_start_at_login)
@@ -305,7 +303,6 @@ class Macast(App):
         self.open_config_menuitem = MenuItem(_("Open Config Directory"), self.on_open_config_click)
         self.advanced_menuitem = MenuItem(_("Advanced Setting"),
                                           lambda _: self.open_browser('http://127.0.0.1:{}'.format(Setting.get_port())))
-        self.check_update_menuitem = MenuItem(_("Check For Updates"), self.on_check_click)
         self.about_menuitem = MenuItem(_("Help"), self.on_about_click)
 
         self.menubar_icon_menuitem.items()[self.setting_menubar_icon].checked = True
@@ -318,49 +315,24 @@ class Macast(App):
                protocol_select + \
                [None] + \
                player_settings + \
-               [self.menubar_icon_menuitem, self.auto_check_update_menuitem,
-                self.open_config_menuitem, self.advanced_menuitem] + \
+               [self.menubar_icon_menuitem, self.open_config_menuitem,
+                self.advanced_menuitem] + \
                platform_options + \
-               [None, self.check_update_menuitem, self.about_menuitem]
+               [None, self.about_menuitem]
 
     def init_setting(self):
         self.setting_start_at_login = Setting.get(SettingProperty.StartAtLogin, 0)
-        self.setting_check = Setting.get(SettingProperty.CheckUpdate, 1)
         self.setting_menubar_icon = Setting.get(SettingProperty.MenubarIcon, 1 if sys.platform == 'darwin' else 0)
         self.setting_renderer = Setting.get(SettingProperty.Macast_Renderer, 'MPV')
+        self.setting_renderer = {'波澜播放器-IINA': 'Bolan IINA Renderer'}.get(
+            self.setting_renderer, self.setting_renderer)
         self.setting_protocol = Setting.get(SettingProperty.Macast_Protocol, 'DLNA')
-        if self.setting_check:
-            threading.Thread(target=self.check_update,
-                             kwargs={
-                                 'verbose': False
-                             },
-                             daemon=True,
-                             name="CHECKUPDATE_THREAD").start()
 
     def stop_cast(self):
         self.service.stop()
 
     def start_cast(self):
         self.service.run_async()
-
-    def check_update(self, verbose=True):
-        release_url = 'https://github.com/xfangfang/Macast/releases/latest'
-        api_url = 'https://api.github.com/repos/xfangfang/Macast/releases/latest'
-        try:
-            res = json.loads(requests.get(api_url).text)
-            online_version = re.findall(r'(\d+\.*\d+)', res['tag_name'])[0]
-
-            logger.info("tag_name: {}".format(res['tag_name']))
-
-            if float(Setting.get_version()) < float(online_version):
-                self.dialog(_("Macast New Update {}").format(res['tag_name']),
-                            lambda: self.open_browser(release_url),
-                            ok="Update")
-            else:
-                if verbose:
-                    self.notification("Macast", _("You're up to date."))
-        except Exception as e:
-            logger.error("get update info error: {}".format(e))
 
     # The followings are the callback function of program event
 
@@ -458,16 +430,6 @@ class Macast(App):
 
     def on_open_config_click(self, item):
         self.open_directory(SETTING_DIR)
-
-    def on_check_click(self, item):
-        threading.Thread(target=self.check_update,
-                         daemon=True,
-                         name="CHECKUPDATE_M_THREAD").start()
-
-    def on_auto_check_update_click(self, item):
-        item.checked = not item.checked
-        Setting.set(SettingProperty.CheckUpdate,
-                    1 if item.checked else 0)
 
     def on_start_at_login_click(self, item):
         res = Setting.set_start_at_login(not item.checked)

@@ -30,7 +30,6 @@ RENDERER_DIR = 'renderer'
 
 class SettingProperty(Enum):
     USN = 0
-    CheckUpdate = 1
     StartAtLogin = 2
     MenubarIcon = 3
     ApplicationPort = 4
@@ -78,6 +77,13 @@ class Setting:
                 try:
                     with open(Setting.setting_path, "r") as f:
                         Setting.setting = json.load(fp=f)
+                    # Retire the old upstream update-check preference. It is no
+                    # longer a setting in this distribution or its settings page.
+                    if Setting.setting.pop('CheckUpdate', None) is not None:
+                        try:
+                            Setting.save()
+                        except OSError as error:
+                            logger.warning('Could not remove obsolete update preference: %s', error)
                     logger.error(Setting.setting)
                 except Exception as e:
                     logger.error(e)

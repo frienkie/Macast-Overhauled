@@ -130,3 +130,11 @@ dmypy.json
 
 bin
 mpv-latest.tar.gz
+
+# Local release build artifacts
+Macast-MacOS-v*.dmg
+installation-backup-*/
+build-before-*/
+dist-before-*/
+release-backups/
+diagnostics/

@@ -1,0 +1,2 @@
+https://download.gnome.org/sources/glib/2.90/glib-2.90.1.tar.xz
+SHA256: 93c941aa17d5eb1d53fe838365f29a8b4e539c222a256d974ec8f30fc413e396

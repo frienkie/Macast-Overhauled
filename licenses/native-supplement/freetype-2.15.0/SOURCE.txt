@@ -1,0 +1,2 @@
+https://downloads.sourceforge.net/project/freetype/freetype2/2.15.0/freetype-2.15.0.tar.xz
+SHA256: 93cd47eb719c325107f2d3cf087d06299e944c3b48a40b55537302304dea1dd5

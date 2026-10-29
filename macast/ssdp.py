@@ -12,6 +12,7 @@
 #
 
 import sys
+import errno
 import random
 import socket
 import logging
@@ -64,6 +65,7 @@ class SSDPServer:
     def __init__(self):
         self.ip_list = []
         self.sock_list = []
+        self.pending_memberships = []
         self.sock = None
         self.running = False
         self.ssdp_thread = None
@@ -124,6 +126,7 @@ class SSDPServer:
         # self.sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 10)
 
         self.ip_list = list(Setting.get_ip())
+        self.pending_memberships = []
         if sys.platform == 'win32':
             self.ip_list.append(('192.168.137.1', '255.255.255.0'))
         self.sock_list = []
@@ -135,6 +138,9 @@ class SSDPServer:
                 self.sock_list.append(Sock(ip))
             except Exception as e:
                 logger.error(e)
+                if sys.platform == 'darwin' and getattr(e, 'errno', None) in (errno.EACCES, errno.EPERM):
+                    self.pending_memberships.append(ip)
+                    logger.warning('Allow Macast in System Settings > Privacy & Security > Local Network. Retrying discovery.')
 
         try:
             self.sock.bind(('0.0.0.0', SSDP_PORT))
@@ -146,6 +152,7 @@ class SSDPServer:
         self.sock.settimeout(1)
 
         while self.running:
+            self.retry_memberships()
             try:
                 data, addr = self.sock.recvfrom(1024)
                 self.datagram_received(data, addr)
@@ -161,6 +168,18 @@ class SSDPServer:
                 continue
         self.sock.close()
         self.sock = None
+
+    def retry_memberships(self):
+        """The first multicast operation can fail while the permission alert is open."""
+        for ip in self.pending_memberships[:]:
+            try:
+                mreq = socket.inet_aton(SSDP_ADDR) + socket.inet_aton(ip)
+                self.sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+            except OSError:
+                continue
+            self.sock_list.append(Sock(ip))
+            self.pending_memberships.remove(ip)
+            logger.info('Local network access available for %s', ip)
 
     def shutdown(self):
         for st in self.known:

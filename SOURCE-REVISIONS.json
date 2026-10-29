@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-22",
+  "validation": "26 regression tests passed on Windows / Python 3.12.14; macOS 27 device validation pending",
+  "repositories": {
+    "Macast": {
+      "upstream": "https://github.com/xfangfang/Macast.git",
+      "base_commit": "121add3a8a70edb77e33aeab1ec88aeff27f49fc"
+    },
+    "Macast-plugins": {
+      "upstream": "https://github.com/xfangfang/Macast-plugins.git",
+      "base_commit": "e4a18457aa7addd3a46041420d277343b66647ee"
+    }
+  }
+}

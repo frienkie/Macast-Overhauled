@@ -1,0 +1,23 @@
+{
+  "repository": "https://github.com/Samillion/ModernZ",
+  "commit": "579897e8c974c380caa5017dc7b27a69123c1333",
+  "original_sha256": {
+    "modernz.lua": "6f622f138931a0b3b019fd17fb7d85febf0d0b733948a814ab54ec1c40ed2268",
+    "modernz-icons.ttf": "5033b84d569502538968c6f23b0859bda790eed85c10e419b0759537ec60a016",
+    "LICENSE": "20c17d8b8c48a600800dfd14f95d5cb9ff47066a9641ddeab48dc54aec96e331",
+    "modernz.conf": "e730a176703eee29404b2d16dfab58bbaef368b04c1b2a37aafc2b40983388bd",
+    "extras/locale/modernz-locale.json": "5d3064227d77d4c952a44a814ffd0736e3cb3d7e8cf07b22dcb8cd4750588cb2"
+  },
+  "local_changes": [
+    "Retain bundled locale resources; use English as the integrated UI default",
+    "Apply live monitor DPI and bounded window-height scaling",
+    "Expose live UI size adjustment through a Macast script message",
+    "English UI and filtered primary subtitle selection",
+    "Independent secondary ASS danmaku plane and a vector speech-bubble toggle",
+    "Hide audio-track and in-player pin buttons while retaining volume and Macast Player Ontop setting",
+    "Add a baseline-aligned Fluent-metrics danmaku icon to the bundled font"
+  ],
+  "modified_modernz_sha256": "20edbff9e0335dfee18874f7b4f6300175ab168b0f439cd16cc0d05e2d661f5a",
+  "packaged_script": "scripts/modernz/main.lua",
+  "modified_icon_font_sha256": "d6d4435e1f306360ed16860242b878648ed9dc9e555978b11639568a9cff11ee"
+}

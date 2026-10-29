@@ -7,27 +7,41 @@ Usage:
 
 import os
 import datetime
+from pathlib import Path
+import runpy
 from setuptools import setup
 
 APP = ['Macast.py']
-DATA_FILES = ['i18n']
+root = Path(__file__).resolve().parent
+prepare_plugins = runpy.run_path(str(root / 'tools/prepare_plugins.py'))['prepare_plugins']
+bundled = root / 'bundled_plugins'
+plugin_source = root / 'Macast-plugins'
+if not plugin_source.is_dir():
+    plugin_source = root.parent / 'Macast-plugins'
+prepare_plugins(plugin_source, bundled)
+DATA_FILES = ['i18n', 'bundled_plugins', 'mpv_ui']
 VERSION = "0.0.0"
 with open('macast/.version', 'r') as f:
     VERSION = f.read().strip()
 copyright = 'Copyright {} xfangfang and the Macast contributors.'.format(datetime.datetime.now().year)
 OPTIONS = {
-    'argv_emulation': True,
+    # rumps owns the Cocoa event loop; argv emulation interferes with it.
+    'argv_emulation': False,
     'plist': {
         'LSUIElement': True,
         'NSHighResolutionCapable': True,
-        'LSMinimumSystemVersion': '10.12.0',
+        'LSMinimumSystemVersion': '15.0',
         'CFBundleIdentifier': 'cn.xfangfang.Macast',
+        'NSLocalNetworkUsageDescription': 'Macast uses your local network to discover casting devices and receive media from your phone.',
         'NSHumanReadableCopyright': copyright,
         'CFBundleShortVersionString': str(VERSION),
         'CFBundleVersion': str(VERSION),
     },
     'excludes': ['PIL', 'tkinter'],
     'packages': ['rumps', 'macast', 'macast_renderer'],
+    # Bundled plugins are data files, so their dynamic imports need to be
+    # included explicitly when they are not already used by the core app.
+    'includes': ['webbrowser'],
     'iconfile': os.path.abspath('macast/assets/icon.icns')
 }
 

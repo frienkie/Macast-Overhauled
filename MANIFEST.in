@@ -1,4 +1,7 @@
 include *.md
+include LICENSE
+recursive-include licenses *
+recursive-include tools *.py *.sh
 recursive-include macast .version
 recursive-include macast/xml *.xml
 recursive-include macast/xml *.html
@@ -9,3 +12,5 @@ recursive-include macast/assets *.icns
 recursive-include macast/assets *.ico
 recursive-include macast/assets *.js
 recursive-include macast/assets *.css
+recursive-include bundled_plugins *.py *.json *.md LICENSE
+recursive-include mpv_ui *.lua *.ttf *.conf *.json *.md LICENSE.*
