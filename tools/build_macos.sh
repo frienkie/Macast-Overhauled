@@ -9,7 +9,7 @@ test "$("$python_bin" -c 'import platform; print(platform.machine())')" = "$arch
   echo 'Use native Python and Homebrew, without Rosetta.' >&2; exit 1;
 }
 mpv_bin="$(command -v mpv)"
-lipo -verify_arch "$arch" "$mpv_bin"
+lipo -archs "$mpv_bin" | tr ' ' '\n' | grep -qx "$arch"
 command -v dylibbundler >/dev/null
 command -v create-dmg >/dev/null
 command -v msgfmt >/dev/null
